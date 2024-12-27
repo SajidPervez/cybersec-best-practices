@@ -10,7 +10,7 @@ function ExplainPage() {
   const [selectedDomain, setSelectedDomain] = useState('');
   const [currentDomain, setCurrentDomain] = useState('');
   const [showDomain, setShowDomain] = useState(false);
-  const [interval, setInterval] = useState(20);
+  const [delay, setDelay] = useState(20); // Default 20 seconds for Examples page
   const [isPaused, setIsPaused] = useState(false);
   const [explanation, setExplanation] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -121,6 +121,13 @@ function ExplainPage() {
     }).filter(Boolean);
   };
 
+  const handleDelayChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (value >= 20) { // Minimum 20 seconds to avoid API misuse
+      setDelay(value);
+    }
+  };
+
   useEffect(() => {
     startNewPractice();
   }, [selectedDomain]);
@@ -133,7 +140,7 @@ function ExplainPage() {
     if (!isPaused && index === currentText.length && currentText) {
       timerRef.current = setTimeout(() => {
         startNewPractice();
-      }, interval * 1000);
+      }, delay * 1000);
     }
 
     return () => {
@@ -141,7 +148,7 @@ function ExplainPage() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [index, currentText, interval, startNewPractice, isPaused]);
+  }, [index, currentText, delay, startNewPractice, isPaused]);
 
   useEffect(() => {
     let timer;
@@ -186,8 +193,8 @@ function ExplainPage() {
             type="number"
             min="20"
             max="60"
-            value={interval}
-            onChange={(e) => setInterval(Math.max(20, Number(e.target.value)))}
+            value={delay}
+            onChange={handleDelayChange}
             className="interval-input"
           />
           <span className="interval-label">seconds</span>

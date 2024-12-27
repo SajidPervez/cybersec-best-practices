@@ -9,7 +9,7 @@ function HomePage() {
   const [selectedDomain, setSelectedDomain] = useState('');
   const [currentDomain, setCurrentDomain] = useState('');
   const [showDomain, setShowDomain] = useState(false);
-  const [interval, setInterval] = useState(20);
+  const [delay, setDelay] = useState(10); // Default 10 seconds for General page
   const domains = Object.keys(practices.domains);
   const TYPING_SPEED = 50;
   const timerRef = useRef(null);
@@ -51,7 +51,7 @@ function HomePage() {
     if (index === currentText.length && currentText) {
       timerRef.current = setTimeout(() => {
         startNewPractice();
-      }, interval * 1000);
+      }, delay * 1000);
     }
 
     return () => {
@@ -59,7 +59,7 @@ function HomePage() {
         clearTimeout(timerRef.current);
       }
     };
-  }, [index, currentText, interval, startNewPractice]);
+  }, [index, currentText, delay, startNewPractice]);
 
   useEffect(() => {
     let timer;
@@ -73,6 +73,13 @@ function HomePage() {
     }
     return () => clearTimeout(timer);
   }, [index, currentText]);
+
+  const handleDelayChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (value >= 10) { // Minimum 10 seconds
+      setDelay(value);
+    }
+  };
 
   return (
     <div className="app-container">
@@ -93,10 +100,10 @@ function HomePage() {
         <div className="interval-container">
           <input
             type="number"
-            min="20"
+            min="10"
             max="60"
-            value={interval}
-            onChange={(e) => setInterval(Math.max(20, Number(e.target.value)))}
+            value={delay}
+            onChange={handleDelayChange}
             className="interval-input"
           />
           <span className="interval-label">seconds</span>
