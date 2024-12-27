@@ -48,8 +48,11 @@ function ExplainPage() {
   const fetchExplanation = async (practice, domain) => {
     setIsLoading(true);
     try {
-      const apiUrl = `${import.meta.env.VITE_API_URL || ''}/api/explain`;
-      console.log('Fetching from:', apiUrl); // Debug log
+      // Make sure we have a base URL, either from env or default to current origin
+      const baseUrl = import.meta.env.VITE_API_URL || window.location.origin;
+      const apiUrl = `${baseUrl}/api/explain`;
+      console.log('Base URL:', baseUrl);
+      console.log('Full API URL:', apiUrl);
       
       const response = await fetch(apiUrl, {
         method: 'POST',
@@ -59,8 +62,7 @@ function ExplainPage() {
         body: JSON.stringify({
           practice,
           domain
-        }),
-        credentials: 'include'
+        })
       });
 
       if (!response.ok) {
@@ -73,7 +75,7 @@ function ExplainPage() {
       setExplanation(data.explanation);
     } catch (error) {
       console.error('Error fetching explanation:', error);
-      setExplanation('Failed to fetch explanation. Please try again later.');
+      setExplanation(`Failed to fetch explanation. Error: ${error.message}`);
     } finally {
       setIsLoading(false);
     }

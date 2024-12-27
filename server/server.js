@@ -15,12 +15,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production'
-    ? [/\.vercel\.app$/, /localhost/] // Accept all Vercel subdomains and localhost
-    : ['http://localhost:5173'],
+  origin: '*', // Allow all origins in production for now
   methods: ['POST', 'GET', 'OPTIONS'],
-  allowedHeaders: ['Content-Type'],
-  credentials: true
+  allowedHeaders: ['Content-Type']
 };
 
 app.use(cors(corsOptions));
@@ -113,6 +110,10 @@ Note: Use clear headings and avoid any special formatting characters.`
       details: error.message 
     });
   }
+});
+
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working!' });
 });
 
 app.listen(PORT, () => {
