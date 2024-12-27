@@ -7,6 +7,7 @@ A modern, responsive React application that displays cybersecurity best practice
 - **Dynamic Practice Display**: Automatically cycles through cybersecurity best practices with a typewriter animation effect
 - **Domain Selection**: Choose specific security domains or view practices from all domains
 - **Customizable Timing**: Adjust the display duration (minimum 20 seconds) between practices
+- **Detailed Explanations**: Get in-depth explanations and practical examples for each best practice (requires API key)
 - **Responsive Design**: Works seamlessly across desktop, tablet, and mobile devices
 - **Clean Interface**: Minimalist design focusing on content readability
 
@@ -29,6 +30,7 @@ The application covers various cybersecurity domains including:
 - **Animations**: Framer Motion for smooth transitions
 - **Data Storage**: JSON-based practice repository
 - **State Management**: React Hooks (useState, useEffect, useCallback)
+- **API Integration**: Google Gemini API for detailed explanations
 
 ## Getting Started
 
@@ -43,26 +45,39 @@ The application covers various cybersecurity domains including:
    npm install
    ```
 
-3. Run the development server:
+3. Set up environment variables:
+   - Create a `.env.local` file in the root directory
+   - Add your Google Gemini API key:
+     ```
+     VITE_GEMINI_API_KEY=your_api_key_here
+     PORT=3001
+     ```
+   Note: The "With Examples" feature requires a valid Google Gemini API key. Without it, only the basic practice display will be available.
+
+4. Start the backend server:
+   ```bash
+   cd server
+   npm install
+   npm start
+   ```
+
+5. In a new terminal, start the frontend development server:
    ```bash
    npm run dev
    ```
 
-4. Open [http://localhost:5173](http://localhost:5173) in your browser
+6. Open [http://localhost:5173](http://localhost:5173) in your browser
 
 ## Usage
 
-- **View Practices**: Practices will automatically display and change every 20 seconds
-- **Select Domain**: Use the dropdown to focus on specific security domains
-- **Adjust Timing**: Use the input field to increase the display duration (minimum 20 seconds)
+- **General View**: The home page displays cybersecurity best practices with a typewriter effect
+- **With Examples**: Click "With Examples" to get detailed explanations and practical examples (requires API key)
+- **Domain Filter**: Use the domain selector to focus on specific security areas
+- **Timer Control**: Adjust the display duration using the timer control (minimum 20 seconds)
 
 ## Contributing
 
-Contributions are welcome! Feel free to:
-- Add new security practices to the JSON data file
-- Improve the UI/UX
-- Add new features
-- Fix bugs
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 

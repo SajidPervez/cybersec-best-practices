@@ -1,3 +1,35 @@
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 1rem;
+  z-index: 100;
+}
+
+.nav-list {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  align-items: center;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  color: white;
+}
+
+.nav-link.active {
+  color: white;
+  font-weight: 500;
+}
+
 .app-container {
   display: flex;
   align-items: center;
@@ -20,7 +52,7 @@
   background-color: rgba(255, 255, 255, 0.1);
   padding: 1rem;
   border-radius: 0.5rem;
-  z-index: 100;
+  z-index: 50;
 }
 
 .domain-select {
@@ -95,6 +127,158 @@
   font-size: 1.2rem;
   font-style: italic;
   margin-top: 1rem;
+}
+
+.explain-button {
+  margin-top: 2rem;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.explain-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.explain-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.explanation-container {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  width: 100%;
+  max-width: 800px;
+  max-height: 70vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.explanation-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.explanation-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.explanation-container::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.explanation-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.explanation-section {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.explanation-section:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.section-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+}
+
+.explanation-section.main .section-icon {
+  color: #ffd700;
+}
+
+.explanation-section.example .section-icon {
+  color: #00ff00;
+}
+
+.explanation-section.important .section-icon {
+  color: #ff6b6b;
+}
+
+.explanation-section.detail .section-icon {
+  color: #4a9eff;
+}
+
+.explanation-section h3 {
+  color: white;
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.explanation-section p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.explanation-text {
+  color: white;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  white-space: pre-wrap;
+}
+
+.continue-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.continue-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.button-icon {
+  font-size: 1.2rem;
+}
+
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+}
+
+.github-link:hover {
+  color: white;
+  transform: scale(1.1);
 }
 
 @keyframes pulse {
