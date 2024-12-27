@@ -1,0 +1,100 @@
+{
+  "domains": {
+    "network_security": [
+      "Use firewalls to segment traffic.",
+      "Implement network segmentation using firewalls.",
+      "Use encrypted VPN for remote access.",
+      "Monitor network traffic for suspicious activities.",
+      "Regularly update and patch network devices.",
+      "Deploy intrusion detection systems (IDS).",
+      "Disable unused ports and protocols.",
+      "Implement Network Access Control (NAC) to restrict unauthorized devices."
+    ],
+    "application_security": [
+      "Validate all user inputs to prevent injection attacks.",
+      "Implement secure session management.",
+      "Use parameterized queries to prevent SQL injection.",
+      "Implement proper error handling without exposing details.",
+      "Enable HTTPS for all web traffic.",
+      "Adopt secure coding practices to avoid common vulnerabilities.",
+      "Regularly perform application security testing (e.g., SAST, DAST).",
+      "Use secure frameworks and libraries."
+    ],
+    "data_security": [
+      "Encrypt sensitive data at rest and in transit.",
+      "Implement regular data backup procedures.",
+      "Use strong encryption algorithms for data protection.",
+      "Apply data masking for sensitive information.",
+      "Implement secure key management practices.",
+      "Classify data to determine its sensitivity and apply appropriate controls.",
+      "Implement data loss prevention (DLP) tools to prevent unauthorized access."
+    ],
+    "identity_management": [
+      "Enforce strong password policies.",
+      "Implement multi-factor authentication.",
+      "Use the principle of least privilege.",
+      "Regular review of user access rights.",
+      "Implement secure password recovery mechanisms.",
+      "Use single sign-on (SSO) for better user experience and security.",
+      "Monitor for anomalous login behavior using identity analytics."
+    ],
+    "cloud_security": [
+      "Enable cloud service encryption.",
+      "Implement secure access controls for cloud resources.",
+      "Regular monitoring of cloud service configurations.",
+      "Use cloud security posture management tools.",
+      "Implement cloud backup and recovery procedures.",
+      "Regularly review cloud storage configurations for misconfigurations.",
+      "Ensure secure APIs for cloud integrations."
+    ],
+    "endpoint_security": [
+      "Install and maintain antivirus software.",
+      "Implement endpoint detection and response (EDR).",
+      "Regular system updates and patch management.",
+      "Control USB and removable media access.",
+      "Implement host-based firewalls.",
+      "Enable device encryption to protect sensitive data on devices.",
+      "Use mobile device management (MDM) solutions for mobile devices."
+    ],
+    "security_awareness": [
+      "Conduct regular security awareness training.",
+      "Simulate phishing attacks for training.",
+      "Maintain security documentation and policies.",
+      "Regular security compliance training.",
+      "Create incident response procedures.",
+      "Encourage reporting of suspicious activities or potential threats."
+    ],
+    "mobile_security": [
+      "Enforce mobile device encryption.",
+      "Implement mobile device management (MDM).",
+      "Secure app deployment policies.",
+      "Regular mobile security assessments.",
+      "Control mobile app permissions.",
+      "Ensure all mobile devices have up-to-date security patches.",
+      "Use secure communication protocols for mobile data transmission.",
+      "Enable remote wipe for lost or stolen devices.",
+      "Educate users on avoiding malicious apps and phishing links."
+    ],
+    "incident_response": [
+      "Develop and regularly test an incident response plan.",
+      "Establish a communication plan for handling security incidents.",
+      "Conduct post-incident reviews to identify improvements.",
+      "Create an incident classification system to prioritize responses.",
+      "Ensure 24/7 monitoring and response capabilities."
+    ],
+    "risk_management": [
+      "Perform regular risk assessments to identify vulnerabilities.",
+      "Maintain an up-to-date risk register to track risks.",
+      "Mitigate risks through proper controls and monitoring.",
+      "Use quantitative risk analysis for decision-making.",
+      "Engage third-party risk management for vendor assessments."
+    ],
+    "vulnerability_management": [
+      "Perform regular vulnerability scans across all systems.",
+      "Prioritize patching based on risk and criticality.",
+      "Track and remediate vulnerabilities within defined SLAs.",
+      "Monitor for zero-day vulnerabilities and deploy temporary controls.",
+      "Use automated tools to streamline vulnerability management."
+    ]
+  }
+}
