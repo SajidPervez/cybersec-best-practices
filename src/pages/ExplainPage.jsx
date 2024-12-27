@@ -48,13 +48,15 @@ function ExplainPage() {
   const fetchExplanation = async (practice, domain) => {
     setIsLoading(true);
     try {
-      // Make sure we have a base URL, either from env or default to current origin
-      const baseUrl = import.meta.env.VITE_API_URL || window.location.origin;
-      const apiUrl = `${baseUrl}/api/explain`;
-      console.log('Base URL:', baseUrl);
-      console.log('Full API URL:', apiUrl);
+      // Always require VITE_API_URL in production
+      const apiUrl = import.meta.env.VITE_API_URL;
+      if (!apiUrl) {
+        throw new Error('API URL not configured. Please set VITE_API_URL environment variable.');
+      }
+
+      console.log('Using API URL:', apiUrl);
       
-      const response = await fetch(apiUrl, {
+      const response = await fetch(`${apiUrl}/api/explain`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
