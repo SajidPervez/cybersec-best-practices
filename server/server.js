@@ -14,7 +14,15 @@ dotenv.config({ path: '../.env.local' });
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.use(cors());
+const corsOptions = {
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://cybersec-best-practices.vercel.app']
+    : ['http://localhost:5173'],
+  methods: ['POST', 'GET', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Read system prompt from file
