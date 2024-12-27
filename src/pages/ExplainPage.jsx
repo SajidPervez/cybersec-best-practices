@@ -48,26 +48,32 @@ function ExplainPage() {
   const fetchExplanation = async (practice, domain) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/explain`, {
+      const apiUrl = `${import.meta.env.VITE_API_URL || ''}/api/explain`;
+      console.log('Fetching from:', apiUrl); // Debug log
+      
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           practice,
-          domain: formatDomainName(domain)
-        })
+          domain
+        }),
+        credentials: 'include'
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch explanation');
+        const errorText = await response.text();
+        console.error('API Error:', response.status, errorText);
+        throw new Error(`API Error: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
       setExplanation(data.explanation);
     } catch (error) {
       console.error('Error fetching explanation:', error);
-      setExplanation('Sorry, there was an error getting the explanation. Please try again.');
+      setExplanation('Failed to fetch explanation. Please try again later.');
     } finally {
       setIsLoading(false);
     }

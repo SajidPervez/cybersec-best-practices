@@ -16,10 +16,11 @@ const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
   origin: process.env.NODE_ENV === 'production'
-    ? ['https://cybersec-best-practices.vercel.app']
+    ? [/\.vercel\.app$/, /localhost/] // Accept all Vercel subdomains and localhost
     : ['http://localhost:5173'],
   methods: ['POST', 'GET', 'OPTIONS'],
-  allowedHeaders: ['Content-Type']
+  allowedHeaders: ['Content-Type'],
+  credentials: true
 };
 
 app.use(cors(corsOptions));
