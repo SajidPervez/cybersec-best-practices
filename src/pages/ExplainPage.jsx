@@ -53,9 +53,20 @@ function ExplainPage() {
     setError(null);
     
     try {
-      const config = getEnvConfig();
-      console.log('Environment config:', config);
-
+      let config;
+      try {
+        config = getEnvConfig();
+      } catch (error) {
+        console.warn('Failed to get environment config:', error);
+        // Fallback for development
+        config = {
+          apiUrl: 'http://localhost:3001',
+          isDev: true,
+          isProd: false
+        };
+      }
+      
+      console.log('Config being used:', config);
       const fullUrl = `${config.apiUrl}/api/explain`;
       console.log('Making request to:', fullUrl);
       
@@ -76,7 +87,8 @@ function ExplainPage() {
           status: response.status,
           statusText: response.statusText,
           error: errorText,
-          requestUrl: fullUrl
+          requestUrl: fullUrl,
+          currentUrl: window.location.href
         });
         throw new Error(`API Error: ${response.status} - ${errorText}`);
       }
