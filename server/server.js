@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: '*', // Allow all origins in production for now
+  origin: '*', 
   methods: ['POST', 'GET', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 };
@@ -23,17 +23,37 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// Read system prompt from file
+// Test endpoint
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'API is working!' });
+});
+
+// Get system prompt
 const getSystemPrompt = async () => {
-  const promptPath = path.join(__dirname, 'system-prompt.md');
-  return await fs.readFile(promptPath, 'utf-8');
+  try {
+    const promptPath = path.join(__dirname, 'system-prompt.md');
+    return await fs.readFile(promptPath, 'utf-8');
+  } catch (error) {
+    console.error('Error reading system prompt:', error);
+    return 'Default system prompt: You are a cybersecurity expert...';
+  }
 };
 
+// Explain endpoint
 app.post('/api/explain', async (req, res) => {
+  console.log('Received request for explanation');
   try {
     const { practice, domain } = req.body;
+    console.log('Practice:', practice);
+    console.log('Domain:', domain);
+
     const apiKey = process.env.VITE_GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error('API key not configured');
+    }
+
     const systemPrompt = await getSystemPrompt();
+    console.log('System prompt loaded');
     
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
@@ -92,28 +112,25 @@ Note: Use clear headings and avoid any special formatting characters.`
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('API Error:', errorData);
+      console.error('Gemini API Error:', errorData);
       throw new Error(errorData.error?.message || 'Failed to fetch explanation');
     }
 
     const data = await response.json();
     const explanation = data.candidates[0].content.parts[0].text
-      .replace(/\*\*/g, '')  // Remove all ** markers
-      .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+      .replace(/\*\*/g, '')
+      .replace(/\s+/g, ' ')
       .trim();
     
+    console.log('Sending explanation response');
     res.json({ explanation });
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Server Error:', error);
     res.status(500).json({ 
       error: 'Failed to get explanation',
       details: error.message 
     });
   }
-});
-
-app.get('/api/test', (req, res) => {
-  res.json({ message: 'API is working!' });
 });
 
 app.listen(PORT, () => {
