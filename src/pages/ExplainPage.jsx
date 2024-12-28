@@ -52,14 +52,24 @@ function ExplainPage() {
     setError(null);
     
     try {
+      console.log('Environment variables:', {
+        VITE_API_URL: import.meta.env.VITE_API_URL,
+        MODE: import.meta.env.MODE,
+        DEV: import.meta.env.DEV,
+        PROD: import.meta.env.PROD
+      });
+
       const apiUrl = import.meta.env.VITE_API_URL;
       if (!apiUrl) {
+        console.error('API URL is not configured!');
         throw new Error('API URL not configured. Please set VITE_API_URL environment variable.');
       }
 
-      console.log('Using API URL:', apiUrl);
+      const fullUrl = `${apiUrl}/api/explain`;
+      console.log('Making request to:', fullUrl);
+      console.log('Request data:', { practice, domain });
       
-      const response = await fetch(`${apiUrl}/api/explain`, {
+      const response = await fetch(fullUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -70,6 +80,8 @@ function ExplainPage() {
         })
       });
 
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
         const errorText = await response.text();
         console.error('API Error:', response.status, errorText);
@@ -77,6 +89,8 @@ function ExplainPage() {
       }
 
       const data = await response.json();
+      console.log('Response data:', data);
+      
       if (!data.explanation) {
         throw new Error('No explanation received from server');
       }
