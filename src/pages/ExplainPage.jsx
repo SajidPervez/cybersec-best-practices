@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaLightbulb, FaClipboardCheck, FaExclamationTriangle, FaArrowRight, FaPlayCircle } from 'react-icons/fa';
 import practices from '../data/security-practices.json';
+import { getEnvConfig } from '../config/env';
 
 function ExplainPage() {
   const [displayText, setDisplayText] = useState('');
@@ -52,22 +53,10 @@ function ExplainPage() {
     setError(null);
     
     try {
-      // Get API URL based on environment
-      const apiUrl = import.meta.env.VITE_API_URL;
-      if (!apiUrl) {
-        console.error('API URL is not configured!');
-        throw new Error('API URL not configured. Please set VITE_API_URL environment variable.');
-      }
+      const config = getEnvConfig();
+      console.log('Environment config:', config);
 
-      // Log environment info
-      console.log('Environment:', {
-        mode: import.meta.env.MODE,
-        apiUrl,
-        isDev: import.meta.env.DEV,
-        isProd: import.meta.env.PROD
-      });
-
-      const fullUrl = `${apiUrl}/api/explain`;
+      const fullUrl = `${config.apiUrl}/api/explain`;
       console.log('Making request to:', fullUrl);
       
       const response = await fetch(fullUrl, {
@@ -86,7 +75,8 @@ function ExplainPage() {
         console.error('API Error:', {
           status: response.status,
           statusText: response.statusText,
-          error: errorText
+          error: errorText,
+          requestUrl: fullUrl
         });
         throw new Error(`API Error: ${response.status} - ${errorText}`);
       }
