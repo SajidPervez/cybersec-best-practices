@@ -24,7 +24,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Test endpoint
-app.get('/api/test', (req, res) => {
+app.get('/', (req, res) => {
   res.json({ message: 'API is working!' });
 });
 
@@ -40,7 +40,7 @@ const getSystemPrompt = async () => {
 };
 
 // Explain endpoint
-app.post('/api/explain', async (req, res) => {
+app.post('/', async (req, res) => {
   console.log('Received request for explanation');
   try {
     const { practice, domain } = req.body;

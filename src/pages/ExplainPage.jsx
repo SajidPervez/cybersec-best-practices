@@ -13,6 +13,7 @@ function ExplainPage() {
   const [delay, setDelay] = useState(20); // Default 20 seconds for Examples page
   const [isPaused, setIsPaused] = useState(false);
   const [explanation, setExplanation] = useState(null);
+  const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const domains = Object.keys(practices.domains);
   const TYPING_SPEED = 50;
@@ -42,13 +43,15 @@ function ExplainPage() {
     setIndex(0);
     setShowDomain(false);
     setExplanation(null);
+    setError(null);
     setIsPaused(false);
   }, [getRandomPractice]);
 
   const fetchExplanation = async (practice, domain) => {
     setIsLoading(true);
+    setError(null);
+    
     try {
-      // Always require VITE_API_URL in production
       const apiUrl = import.meta.env.VITE_API_URL;
       if (!apiUrl) {
         throw new Error('API URL not configured. Please set VITE_API_URL environment variable.');
@@ -56,7 +59,7 @@ function ExplainPage() {
 
       console.log('Using API URL:', apiUrl);
       
-      const response = await fetch(`${apiUrl}/api/explain`, {
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -74,10 +77,15 @@ function ExplainPage() {
       }
 
       const data = await response.json();
+      if (!data.explanation) {
+        throw new Error('No explanation received from server');
+      }
+      
       setExplanation(data.explanation);
     } catch (error) {
       console.error('Error fetching explanation:', error);
-      setExplanation(`Failed to fetch explanation. Error: ${error.message}`);
+      setError(error.message);
+      setExplanation(null);
     } finally {
       setIsLoading(false);
     }
@@ -258,6 +266,26 @@ function ExplainPage() {
             >
               <div className="explanation-content">
                 {formatExplanation(explanation)}
+              </div>
+              <button
+                className="continue-button"
+                onClick={handleContinueClick}
+              >
+                <FaPlayCircle className="button-icon" />
+                Continue
+              </button>
+            </motion.div>
+          )}
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="error-container"
+            >
+              <div className="error-content">
+                <FaExclamationTriangle className="error-icon" />
+                <p>{error}</p>
               </div>
               <button
                 className="continue-button"
