@@ -59,7 +59,7 @@ function ExplainPage() {
 
       console.log('Using API URL:', apiUrl);
       
-      const response = await fetch(apiUrl, {
+      const response = await fetch(`${apiUrl}/api/explain`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

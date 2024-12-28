@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: '*', 
+  origin: '*',
   methods: ['POST', 'GET', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 };
@@ -23,8 +23,11 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
+// API Router
+const apiRouter = express.Router();
+
 // Test endpoint
-app.get('/', (req, res) => {
+apiRouter.get('/test', (req, res) => {
   res.json({ message: 'API is working!' });
 });
 
@@ -40,7 +43,7 @@ const getSystemPrompt = async () => {
 };
 
 // Explain endpoint
-app.post('/', async (req, res) => {
+apiRouter.post('/explain', async (req, res) => {
   console.log('Received request for explanation');
   try {
     const { practice, domain } = req.body;
@@ -132,6 +135,9 @@ Note: Use clear headings and avoid any special formatting characters.`
     });
   }
 });
+
+// Mount API router
+app.use('/api', apiRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
