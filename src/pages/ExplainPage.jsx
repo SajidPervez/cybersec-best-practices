@@ -225,6 +225,7 @@ function ExplainPage() {
     setExplanation('');
     setIsLoading(false);
     setShowDomain(false);
+    setIsPaused(false);  // Reset pause state
     startNewPractice();
   };
 
