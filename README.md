@@ -75,6 +75,31 @@ The application covers various cybersecurity domains including:
 - **Domain Filter**: Use the domain selector to focus on specific security areas
 - **Timer Control**: Adjust the display duration using the timer control (minimum 20 seconds)
 
+## Customizing Security Practices
+
+The application uses a JSON file (`src/data/security-practices.json`) to store all security practices and their domains. You can customize this file to match your organization's specific security policies and requirements:
+
+1. The file structure follows this format:
+```json
+{
+  "domains": {
+    "domain_name": [
+      "security practice 1",
+      "security practice 2",
+      ...
+    ],
+    ...
+  }
+}
+```
+
+2. You can use any AI tool (like ChatGPT) to help convert your organization's security policies into this JSON format.
+3. Simply replace the contents of `security-practices.json` with your customized practices.
+4. Each domain should contain an array of security practices relevant to that domain.
+5. Keep the practices concise and actionable for best results.
+
+This allows you to tailor the application to your specific needs while maintaining the interactive learning experience.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.

@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: '*',
+  origin: 'https://cybersec-best-practices.vercel.app',
   methods: ['POST', 'GET', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 };
