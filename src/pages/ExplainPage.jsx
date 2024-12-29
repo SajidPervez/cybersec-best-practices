@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { FaLightbulb, FaClipboardCheck, FaExclamationTriangle, FaArrowRight, FaPlayCircle } from 'react-icons/fa';
 import practices from '../data/security-practices.json';
 import { getEnvConfig } from '../config/env';
+import Typewriter from '../components/Typewriter';
 
 function ExplainPage() {
   const [displayText, setDisplayText] = useState('');
@@ -13,12 +14,22 @@ function ExplainPage() {
   const [showDomain, setShowDomain] = useState(false);
   const [delay, setDelay] = useState(20); // Default 20 seconds for Examples page
   const [isPaused, setIsPaused] = useState(false);
-  const [explanation, setExplanation] = useState(null);
+  const [explanation, setExplanation] = useState('');
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const domains = Object.keys(practices.domains);
   const TYPING_SPEED = 50;
   const timerRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const formatDomainName = (domain) => {
     return domain
@@ -43,10 +54,11 @@ function ExplainPage() {
     setDisplayText('');
     setIndex(0);
     setShowDomain(false);
-    setExplanation(null);
-    setError(null);
+    setSelectedDomain('');
+    setCurrentDomain('');
+    setExplanation('');
     setIsPaused(false);
-  }, [getRandomPractice]);
+  }, []);
 
   const fetchExplanation = async (practice, domain) => {
     setIsLoading(true);
@@ -102,7 +114,7 @@ function ExplainPage() {
     } catch (error) {
       console.error('Error fetching explanation:', error);
       setError(error.message);
-      setExplanation(null);
+      setExplanation('');
     } finally {
       setIsLoading(false);
     }
@@ -165,7 +177,7 @@ function ExplainPage() {
 
   useEffect(() => {
     startNewPractice();
-  }, [selectedDomain]);
+  }, [startNewPractice]);
 
   useEffect(() => {
     if (timerRef.current) {
@@ -236,85 +248,149 @@ function ExplainPage() {
         </div>
       </div>
 
-      <div className="practice-container">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="practice-text"
-        >
-          <div className="practice-content">
-            {displayText}
-            <span className="cursor">|</span>
-          </div>
-        </motion.div>
+      {isMobile ? (
+        <>
+          <div className="content-container">
+            <div className="practice-container">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1 }}
+                className="practice-text"
+              >
+                <div className="practice-content">
+                  <Typewriter 
+                    text={currentText} 
+                    speed={50}
+                    showCursor={true}
+                    loop={false}
+                    className="practice-text"
+                  
+                  />
+                </div>
+              </motion.div>
 
-        {(!selectedDomain && showDomain) && (
+              {(!selectedDomain && showDomain) && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+                  className="domain-name"
+                >
+                  {formatDomainName(currentDomain)}
+                </motion.div>
+              )}
+            </div>
+
+            {explanation && (
+              <div className="explanation-container">
+                <div className="explanation-content">
+                  {formatExplanation(explanation)}
+                </div>
+              </div>
+            )}
+            {error && (
+              <div className="error-container">
+                <div className="error-content">
+                  <FaExclamationTriangle className="error-icon" />
+                  <p>{error}</p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="footer-container">
+            <div className="button-container">
+              <AnimatePresence mode="wait">
+                {!explanation && index === currentText.length && (
+                  <motion.button
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="explain-button"
+                    onClick={handleExplainClick}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Getting explanation...' : 'Explain with example'}
+                  </motion.button>
+                )}
+              </AnimatePresence>
+              {(explanation || error) && (
+                <button
+                  className="continue-button"
+                  onClick={handleContinueClick}
+                >
+                  <FaPlayCircle className="button-icon" />
+                  Continue
+                </button>
+              )}
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="practice-container">
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="domain-name"
+            transition={{ duration: 1 }}
+            className="practice-text"
           >
-            {formatDomainName(currentDomain)}
+            <div className="practice-content">
+              <Typewriter 
+                text={currentText} 
+                speed={50}
+                showCursor={true}
+                loop={false}
+                className="practice-text"
+                
+              />
+            </div>
           </motion.div>
-        )}
 
-        <AnimatePresence mode="wait">
-          {!explanation && index === currentText.length && (
-            <motion.button
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="explain-button"
-              onClick={handleExplainClick}
-              disabled={isLoading}
-            >
-              {isLoading ? 'Getting explanation...' : 'Explain with example'}
-            </motion.button>
-          )}
-
-          {explanation && (
+          {(!selectedDomain && showDomain) && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="explanation-container"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="domain-name"
             >
-              <div className="explanation-content">
-                {formatExplanation(explanation)}
-              </div>
-              <button
-                className="continue-button"
-                onClick={handleContinueClick}
-              >
-                <FaPlayCircle className="button-icon" />
-                Continue
-              </button>
+              {formatDomainName(currentDomain)}
             </motion.div>
           )}
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="error-container"
-            >
-              <div className="error-content">
-                <FaExclamationTriangle className="error-icon" />
-                <p>{error}</p>
-              </div>
-              <button
-                className="continue-button"
-                onClick={handleContinueClick}
+
+          <AnimatePresence mode="wait">
+            {!explanation && index === currentText.length && (
+              <motion.button
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="explain-button"
+                onClick={handleExplainClick}
+                disabled={isLoading}
               >
-                <FaPlayCircle className="button-icon" />
-                Continue
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+                {isLoading ? 'Getting explanation...' : 'Explain with example'}
+              </motion.button>
+            )}
+
+            {explanation && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="explanation-container"
+              >
+                <div className="explanation-content">
+                  {formatExplanation(explanation)}
+                </div>
+                <button className="continue-button" onClick={handleContinueClick}>
+                  <FaPlayCircle className="button-icon" />
+                  Continue
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
     </div>
   );
 }

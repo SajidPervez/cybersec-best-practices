@@ -31,15 +31,14 @@ const Typewriter = ({
   showCursor = true,
   hideCursorOnType = false,
   cursorChar = "|",
-  cursorClassName = "ml-1",
+  cursorClassName = "",
   cursorAnimationVariants = {
-    initial: { opacity: 0 },
+    initial: { opacity: 1 },
     animate: {
-      opacity: 1,
+      opacity: [1, 0],
       transition: {
-        duration: 0.01,
+        duration: 0.8,
         repeat: Infinity,
-        repeatDelay: 0.4,
         repeatType: "reverse",
       },
     },

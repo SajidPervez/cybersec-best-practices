@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import practices from '../data/security-practices.json';
+import Typewriter from '../components/Typewriter';
 
 function HomePage() {
   const [displayText, setDisplayText] = useState('');
@@ -11,7 +12,6 @@ function HomePage() {
   const [showDomain, setShowDomain] = useState(false);
   const [delay, setDelay] = useState(10); // Default 10 seconds for General page
   const domains = Object.keys(practices.domains);
-  const TYPING_SPEED = 50;
   const timerRef = useRef(null);
 
   const formatDomainName = (domain) => {
@@ -61,24 +61,15 @@ function HomePage() {
     };
   }, [index, currentText, delay, startNewPractice]);
 
-  useEffect(() => {
-    let timer;
-    if (index < currentText.length) {
-      timer = setTimeout(() => {
-        setDisplayText(prev => prev + currentText[index]);
-        setIndex(index + 1);
-      }, TYPING_SPEED);
-    } else if (index === currentText.length && currentText.length > 0) {
-      setShowDomain(true);
-    }
-    return () => clearTimeout(timer);
-  }, [index, currentText]);
-
   const handleDelayChange = (e) => {
     const value = parseInt(e.target.value);
     if (value >= 10) { // Minimum 10 seconds
       setDelay(value);
     }
+  };
+
+  const handleTypingComplete = () => {
+    setShowDomain(true);
   };
 
   return (
@@ -118,8 +109,15 @@ function HomePage() {
           className="practice-text"
         >
           <div className="practice-content">
-            {displayText}
-            <span className="cursor">|</span>
+            <Typewriter 
+              text={currentText} 
+              speed={50}
+              showCursor={true}
+              loop={false}
+              className="practice-text"
+              
+              onComplete={handleTypingComplete}
+            />
           </div>
         </motion.div>
 
