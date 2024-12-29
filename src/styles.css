@@ -95,23 +95,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  width: 100%;
-  max-width: 90vw;
-  margin: 0 auto;
-  padding: 0 2rem;
+  justify-content: flex-start;
+  min-height: 400px;
+  padding: 2rem;
+  position: relative;
 }
 
-.practice-content {
-  display: inline-flex;
+.practice-text-container {
+  height: 200px;
+  display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 90vw;
-  margin: 0 auto;
-  color: white;
-  font-size: clamp(2rem, 2.5vw, 3.5rem);
-  font-weight: bold;
 }
 
 .practice-text {
@@ -127,7 +122,17 @@
   font-weight: bold;
 }
 
-
+.domain-and-button-container {
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  width: 100%;
+  position: absolute;
+  bottom: 2rem;
+}
 
 .domain-name {
   color: rgba(255, 255, 255, 0.7);
@@ -138,7 +143,7 @@
 }
 
 .explain-button {
-  margin-top: 2rem;
+  margin-top: 0;
   padding: 0.75rem 1.5rem;
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
@@ -465,4 +470,73 @@ body, #root {
   0% { opacity: 1; }
   50% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+.next-button-container {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 0 20px;
+  margin: 0;
+}
+
+.next-practice-button {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  padding: 0.75rem 1.5rem;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.next-practice-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.next-icon {
+  font-size: 1rem;
+}
+
+.domain-and-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .buttons-container {
+    flex-direction: column;
+    width: 100%;
+    padding: 0 20px;
+    max-width: 500px;
+    margin: 2rem auto;
+  }
+  
+  .explain-button,
+  .next-practice-button {
+    width: 100%;
+    max-width: none;
+    height: 48px;
+  }
 }

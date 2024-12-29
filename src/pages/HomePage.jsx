@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { FaArrowRight } from 'react-icons/fa';
 import practices from '../data/security-practices.json';
 import Typewriter from '../components/Typewriter';
 
@@ -13,6 +14,7 @@ function HomePage() {
   const [delay, setDelay] = useState(10); // Default 10 seconds for General page
   const domains = Object.keys(practices.domains);
   const timerRef = useRef(null);
+  const TYPING_SPEED = 50;
 
   const formatDomainName = (domain) => {
     return domain
@@ -44,32 +46,35 @@ function HomePage() {
   }, [selectedDomain]);
 
   useEffect(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    if (index === currentText.length && currentText) {
+    let timer;
+    if (index < currentText.length) {
+      timer = setTimeout(() => {
+        setDisplayText(prev => prev + currentText[index]);
+        setIndex(index + 1);
+      }, TYPING_SPEED);
+    } else if (index === currentText.length && currentText.length > 0) {
+      setShowDomain(true);
       timerRef.current = setTimeout(() => {
         startNewPractice();
       }, delay * 1000);
     }
-
     return () => {
+      clearTimeout(timer);
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
     };
   }, [index, currentText, delay, startNewPractice]);
 
+  const handleTypingComplete = () => {
+    setShowDomain(true);
+  };
+
   const handleDelayChange = (e) => {
     const value = parseInt(e.target.value);
     if (value >= 10) { // Minimum 10 seconds
       setDelay(value);
     }
-  };
-
-  const handleTypingComplete = () => {
-    setShowDomain(true);
   };
 
   return (
@@ -102,35 +107,54 @@ function HomePage() {
       </div>
 
       <div className="practice-container">
+        <div className="practice-text-container">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentText}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="practice-text"
+            >
+              <div className="practice-content">
+                <Typewriter 
+                  text={currentText} 
+                  speed={50}
+                  showCursor={true}
+                  loop={false}
+                  className="practice-text"
+                  onComplete={handleTypingComplete}
+                />
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="practice-text"
+          animate={{ opacity: showDomain ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+          className="domain-and-button-container"
         >
-          <div className="practice-content">
-            <Typewriter 
-              text={currentText} 
-              speed={50}
-              showCursor={true}
-              loop={false}
-              className="practice-text"
-              
-              onComplete={handleTypingComplete}
-            />
-          </div>
-        </motion.div>
+          {(!selectedDomain && showDomain) && (
+            <motion.div
+              className="domain-name"
+            >
+              {formatDomainName(currentDomain)}
+            </motion.div>
+          )}
 
-        {(!selectedDomain && showDomain) && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="domain-name"
-          >
-            {formatDomainName(currentDomain)}
-          </motion.div>
-        )}
+          {showDomain && (
+            <motion.div
+              className="next-button-container"
+            >
+              <button onClick={startNewPractice} className="next-practice-button">
+                Next <FaArrowRight className="next-icon" />
+              </button>
+            </motion.div>
+          )}
+        </motion.div>
       </div>
     </div>
   );

@@ -43,22 +43,57 @@ function ExplainPage() {
     if (!selectedDomain) {
       domain = domains[Math.floor(Math.random() * domains.length)];
     }
+    console.log('Selected domain:', domain);
     setCurrentDomain(domain);
     const domainPractices = practices.domains[domain];
-    return domainPractices[Math.floor(Math.random() * domainPractices.length)];
+    console.log('Available practices:', domainPractices);
+    const practice = domainPractices[Math.floor(Math.random() * domainPractices.length)];
+    console.log('Selected practice:', practice);
+    return practice;
   }, [selectedDomain, domains]);
 
   const startNewPractice = useCallback(() => {
+    console.log('startNewPractice called');
     const practice = getRandomPractice();
+    console.log('New practice text:', practice);
     setCurrentText(practice);
     setDisplayText('');
     setIndex(0);
     setShowDomain(false);
-    setSelectedDomain('');
-    setCurrentDomain('');
-    setExplanation('');
-    setIsPaused(false);
-  }, []);
+  }, [getRandomPractice]);
+
+  useEffect(() => {
+    console.log('Current text changed to:', currentText);
+    console.log('Current index:', index);
+    console.log('Display text:', displayText);
+  }, [currentText, index, displayText]);
+
+  useEffect(() => {
+    startNewPractice();
+  }, [selectedDomain]);
+
+  useEffect(() => {
+    let timer;
+    if (index < currentText.length) {
+      console.log('Typing effect - index:', index, 'of total:', currentText.length);
+      timer = setTimeout(() => {
+        setDisplayText(prev => prev + currentText[index]);
+        setIndex(index + 1);
+      }, TYPING_SPEED);
+    } else if (index === currentText.length && currentText.length > 0) {
+      console.log('Reached end of text');
+      setShowDomain(true);
+      timerRef.current = setTimeout(() => {
+        startNewPractice();
+      }, delay * 1000);
+    }
+    return () => {
+      clearTimeout(timer);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, [index, currentText, delay, startNewPractice]);
 
   const fetchExplanation = async (practice, domain) => {
     setIsLoading(true);
@@ -175,9 +210,29 @@ function ExplainPage() {
     }
   };
 
-  useEffect(() => {
+  const handleDomainChange = (e) => {
+    setSelectedDomain(e.target.value);
     startNewPractice();
-  }, [startNewPractice]);
+  };
+
+  const handleNextClick = () => {
+    console.log('Next button clicked');
+    startNewPractice();
+  };
+
+  const handleContinueClick = () => {
+    console.log('Continue button clicked');
+    setExplanation('');
+    setIsLoading(false);
+    setShowDomain(false);
+    startNewPractice();
+  };
+
+  const handleExplainClick = () => {
+    console.log('Explain button clicked');
+    setIsPaused(true);
+    fetchExplanation(currentText, currentDomain);
+  };
 
   useEffect(() => {
     if (timerRef.current) {
@@ -210,13 +265,8 @@ function ExplainPage() {
     return () => clearTimeout(timer);
   }, [index, currentText, isPaused]);
 
-  const handleExplainClick = () => {
-    setIsPaused(true);
-    fetchExplanation(currentText, currentDomain);
-  };
-
-  const handleContinueClick = () => {
-    startNewPractice();
+  const handleTypingComplete = () => {
+    setShowDomain(true);
   };
 
   return (
@@ -224,7 +274,7 @@ function ExplainPage() {
       <div className="header">
         <select
           value={selectedDomain}
-          onChange={(e) => setSelectedDomain(e.target.value)}
+          onChange={handleDomainChange}
           className="domain-select"
         >
           <option value="">All Domains</option>
@@ -252,23 +302,27 @@ function ExplainPage() {
         <>
           <div className="content-container">
             <div className="practice-container">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1 }}
-                className="practice-text"
-              >
-                <div className="practice-content">
-                  <Typewriter 
-                    text={currentText} 
-                    speed={50}
-                    showCursor={true}
-                    loop={false}
-                    className="practice-text"
-                  
-                  />
-                </div>
-              </motion.div>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentText}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }}
+                  className="practice-text"
+                >
+                  <div className="practice-content">
+                    <Typewriter 
+                      text={currentText}
+                      speed={50}
+                      showCursor={true}
+                      loop={false}
+                      className="practice-text"
+                      onComplete={handleTypingComplete}
+                    />
+                  </div>
+                </motion.div>
+              </AnimatePresence>
 
               {(!selectedDomain && showDomain) && (
                 <motion.div
@@ -303,16 +357,19 @@ function ExplainPage() {
             <div className="button-container">
               <AnimatePresence mode="wait">
                 {!explanation && index === currentText.length && (
-                  <motion.button
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="explain-button"
-                    onClick={handleExplainClick}
-                    disabled={isLoading}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="buttons-container"
                   >
-                    {isLoading ? 'Getting explanation...' : 'Explain with example'}
-                  </motion.button>
+                    <button onClick={handleExplainClick} className="explain-button">
+                      {isLoading ? 'Getting explanation...' : 'Explain with example'}
+                    </button>
+                    <button onClick={handleNextClick} className="next-practice-button">
+                      Next <FaArrowRight className="next-icon" />
+                    </button>
+                  </motion.div>
                 )}
               </AnimatePresence>
               {(explanation || error) && (
@@ -329,23 +386,27 @@ function ExplainPage() {
         </>
       ) : (
         <div className="practice-container">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
-            className="practice-text"
-          >
-            <div className="practice-content">
-              <Typewriter 
-                text={currentText} 
-                speed={50}
-                showCursor={true}
-                loop={false}
-                className="practice-text"
-                
-              />
-            </div>
-          </motion.div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentText}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="practice-text"
+            >
+              <div className="practice-content">
+                <Typewriter 
+                  text={currentText}
+                  speed={50}
+                  showCursor={true}
+                  loop={false}
+                  className="practice-text"
+                  onComplete={handleTypingComplete}
+                />
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
           {(!selectedDomain && showDomain) && (
             <motion.div
@@ -360,23 +421,27 @@ function ExplainPage() {
 
           <AnimatePresence mode="wait">
             {!explanation && index === currentText.length && (
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="explain-button"
-                onClick={handleExplainClick}
-                disabled={isLoading}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="buttons-container"
               >
-                {isLoading ? 'Getting explanation...' : 'Explain with example'}
-              </motion.button>
+                <button onClick={handleExplainClick} className="explain-button">
+                  {isLoading ? 'Getting explanation...' : 'Explain with example'}
+                </button>
+                <button onClick={handleNextClick} className="next-practice-button">
+                  Next <FaArrowRight className="next-icon" />
+                </button>
+              </motion.div>
             )}
 
             {explanation && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
                 className="explanation-container"
               >
                 <div className="explanation-content">
