@@ -147,6 +147,8 @@ function HomePage() {
 
           {showDomain && (
             <motion.div
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
               className="next-button-container"
             >
               <button onClick={startNewPractice} className="next-practice-button">
