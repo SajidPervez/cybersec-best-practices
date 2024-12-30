@@ -336,29 +336,31 @@ function ExplainPage() {
                 </motion.div>
               )}
 
-              <div className="buttons-container">
-                <button 
-                  className="explain-button" 
-                  onClick={handleExplainClick}
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <div className="loading-spinner"></div>
-                      Getting explanation...
-                    </>
-                  ) : (
-                    <>
-                      <FaLightbulb className="button-icon" />
-                      Explain with example
-                    </>
-                  )}
-                </button>
-                <button className="next-practice-button" onClick={handleNextClick}>
-                  <FaArrowRight className="button-icon" />
-                  Next
-                </button>
-              </div>
+              {index === currentText.length && !explanation && (
+                <div className="buttons-container">
+                  <button 
+                    className="explain-button" 
+                    onClick={handleExplainClick}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="loading-spinner"></div>
+                        Getting explanation...
+                      </>
+                    ) : (
+                      <>
+                        <FaLightbulb className="button-icon" />
+                        Explain with example
+                      </>
+                    )}
+                  </button>
+                  <button className="next-practice-button" onClick={handleNextClick}>
+                    <FaArrowRight className="button-icon" />
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
 
             {explanation && (
