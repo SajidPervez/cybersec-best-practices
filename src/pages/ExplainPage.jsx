@@ -12,7 +12,7 @@ function ExplainPage() {
   const [selectedDomain, setSelectedDomain] = useState('');
   const [currentDomain, setCurrentDomain] = useState('');
   const [showDomain, setShowDomain] = useState(false);
-  const [delay, setDelay] = useState(20); // Default 20 seconds for Examples page
+  const [delay, setDelay] = useState(10); // Default 10 seconds for Examples page
   const [isPaused, setIsPaused] = useState(false);
   const [explanation, setExplanation] = useState('');
   const [error, setError] = useState(null);
@@ -205,7 +205,7 @@ function ExplainPage() {
 
   const handleDelayChange = (e) => {
     const value = parseInt(e.target.value);
-    if (value >= 20) { // Minimum 20 seconds to avoid API misuse
+    if (value >= 10) { // Minimum 10 seconds to avoid API misuse
       setDelay(value);
     }
   };
@@ -289,7 +289,7 @@ function ExplainPage() {
         <div className="interval-container">
           <input
             type="number"
-            min="20"
+            min="10"
             max="60"
             value={delay}
             onChange={handleDelayChange}
