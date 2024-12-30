@@ -15,7 +15,9 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 const corsOptions = {
-  origin: 'https://cybersec-best-practices.vercel.app',
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://cybersec-best-practices.vercel.app'
+    : 'http://localhost:5173',  // Vite's default port
   methods: ['POST', 'GET', 'OPTIONS'],
   allowedHeaders: ['Content-Type']
 };

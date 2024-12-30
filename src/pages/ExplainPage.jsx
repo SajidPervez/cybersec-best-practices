@@ -302,39 +302,63 @@ function ExplainPage() {
       {isMobile ? (
         <>
           <div className="content-container">
-            <div className="practice-container">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentText}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="practice-text"
-                >
-                  <div className="practice-content">
-                    <Typewriter 
-                      text={currentText}
-                      speed={50}
-                      showCursor={true}
-                      loop={false}
-                      className="practice-text"
-                      onComplete={handleTypingComplete}
-                    />
-                  </div>
-                </motion.div>
-              </AnimatePresence>
+            <div className={`practice-container ${explanation ? 'hide-practice' : ''}`}>
+              <div className="practice-text-container">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentText}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="practice-text"
+                  >
+                    <div className="practice-content">
+                      <Typewriter 
+                        text={currentText}
+                        speed={50}
+                        showCursor={true}
+                        loop={false}
+                        onComplete={handleTypingComplete}
+                      />
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
               {(!selectedDomain && showDomain) && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
                   className="domain-name"
                 >
                   {formatDomainName(currentDomain)}
                 </motion.div>
               )}
+
+              <div className="buttons-container">
+                <button 
+                  className="explain-button" 
+                  onClick={handleExplainClick}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="loading-spinner"></div>
+                      Getting explanation...
+                    </>
+                  ) : (
+                    <>
+                      <FaLightbulb className="button-icon" />
+                      Explain with example
+                    </>
+                  )}
+                </button>
+                <button className="next-practice-button" onClick={handleNextClick}>
+                  <FaArrowRight className="button-icon" />
+                  Next
+                </button>
+              </div>
             </div>
 
             {explanation && (
@@ -357,31 +381,16 @@ function ExplainPage() {
           <div className="footer-container">
             <div className="button-container">
               <AnimatePresence mode="wait">
-                {!explanation && index === currentText.length && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5 }}
-                    className="buttons-container"
+                {explanation && !error && (
+                  <button
+                    className="continue-button"
+                    onClick={handleContinueClick}
                   >
-                    <button onClick={handleExplainClick} className="explain-button">
-                      {isLoading ? 'Getting explanation...' : 'Explain with example'}
-                    </button>
-                    <button onClick={handleNextClick} className="next-practice-button">
-                      Next <FaArrowRight className="next-icon" />
-                    </button>
-                  </motion.div>
+                    <FaPlayCircle className="button-icon" />
+                    Continue
+                  </button>
                 )}
               </AnimatePresence>
-              {(explanation || error) && (
-                <button
-                  className="continue-button"
-                  onClick={handleContinueClick}
-                >
-                  <FaPlayCircle className="button-icon" />
-                  Continue
-                </button>
-              )}
             </div>
           </div>
         </>
