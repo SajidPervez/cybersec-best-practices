@@ -136,6 +136,7 @@
   max-width: 500px;
   margin: 2rem auto 0;
   transition: all 0.3s ease;
+  margin-top: 1rem;
 }
 
 .explain-button {
@@ -514,11 +515,12 @@ body, #root {
   border-radius: 0.5rem;
   font-size: 1rem;
   transition: all 0.2s ease;
+  background-color: transparent;
+  transition: background-color 0.2s ease;
 }
 
 .next-practice-button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .next-icon {
@@ -527,6 +529,8 @@ body, #root {
 
 .next-button-container {
   width: 100%;
+  max-width: 500px;
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
