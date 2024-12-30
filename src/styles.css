@@ -114,17 +114,23 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  
   width: 100%;
   line-height: 1.2;
-  margin-top: 100px;
   color: white;
-  font-size: clamp(2rem, 2.5vw, 3.5rem);
-  font-weight: bold;
   font-size: 2rem;
+  font-weight: bold;
   text-align: center;
-  margin: 0;
-  padding: 0 1rem;
+  padding: 1rem;
+  margin: 2rem 0;
+}
+
+@media (max-width: 768px) {
+  .practice-text {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    padding: 1.5rem;
+    margin: 1rem 0 2rem 0;
+  }
 }
 
 .domain-and-button-container {

@@ -356,8 +356,8 @@ function ExplainPage() {
                     )}
                   </button>
                   <button className="next-practice-button" onClick={handleNextClick}>
-                    <FaArrowRight className="button-icon" />
-                    Next
+                    <FaArrowRight className="next-icon" />
+                    Next 
                   </button>
                 </div>
               )}

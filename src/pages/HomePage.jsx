@@ -145,7 +145,7 @@ function HomePage() {
           {showDomain && (
             <div className="button-container">
               <button onClick={startNewPractice} className="next-practice-button">
-                Next <FaArrowRight className="next-icon" />
+              <FaArrowRight className="next-icon" /> Next 
               </button>
             </div>
           )}
