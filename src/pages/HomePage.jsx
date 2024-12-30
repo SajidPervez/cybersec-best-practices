@@ -131,30 +131,23 @@ function HomePage() {
           </AnimatePresence>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: showDomain ? 1 : 0 }}
-          transition={{ duration: 0.5 }}
-          className="domain-and-button-container"
-        >
-          {(!selectedDomain && showDomain) && (
-            <motion.div
-              className="domain-name"
-            >
-              {formatDomainName(currentDomain)}
-            </motion.div>
-          )}
+        <motion.div className="domain-and-button-container">
+          <motion.div className="domain-container">
+            {(!selectedDomain && showDomain) && (
+              <motion.div
+                className="domain-name"
+              >
+                {formatDomainName(currentDomain)}
+              </motion.div>
+            )}
+          </motion.div>
 
           {showDomain && (
-            <motion.div
-              initial={{ opacity: 1 }}
-              animate={{ opacity: 1 }}
-              className="next-button-container"
-            >
+            <div className="button-container">
               <button onClick={startNewPractice} className="next-practice-button">
                 Next <FaArrowRight className="next-icon" />
               </button>
-            </motion.div>
+            </div>
           )}
         </motion.div>
       </div>
