@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaLightbulb, FaClipboardCheck, FaExclamationTriangle, FaArrowRight, FaPlayCircle } from 'react-icons/fa';
+import { FaLightbulb, FaClipboardCheck, FaExclamationTriangle, FaArrowRight, FaPlayCircle, FaGithub } from 'react-icons/fa';
 import practices from '../data/security-practices.json';
 import { getEnvConfig } from '../config/env';
 import Typewriter from '../components/Typewriter';
@@ -271,203 +271,144 @@ function ExplainPage() {
   };
 
   return (
-    <div className="app-container">
-      <div className="header">
-        <select
-          value={selectedDomain}
-          onChange={handleDomainChange}
-          className="domain-select"
-        >
-          <option value="">All Domains</option>
-          {domains.map(domain => (
-            <option key={domain} value={domain}>
-              {formatDomainName(domain)}
-            </option>
-          ))}
-        </select>
+    <div className="min-h-screen w-full bg-black flex flex-col">
+      {/* Header with controls - Fixed at top */}
+      <div className="w-full bg-black/80 backdrop-blur-md px-4 py-3 mt-16">
+        <div className="flex items-center gap-3 max-w-2xl mx-auto">
+          <select
+            value={selectedDomain}
+            onChange={handleDomainChange}
+            className="flex-1 px-3 py-2 rounded-lg text-base bg-white border-none text-black min-w-0"
+          >
+            <option value="">All Domains</option>
+            {domains.map(domain => (
+              <option key={domain} value={domain}>
+                {formatDomainName(domain)}
+              </option>
+            ))}
+          </select>
 
-        <div className="interval-container">
-          <input
-            type="number"
-            min="10"
-            max="60"
-            value={delay}
-            onChange={handleDelayChange}
-            className="interval-input"
-          />
-          <span className="interval-label">seconds</span>
+          <div className="flex items-center gap-2 shrink-0">
+            <input
+              type="number"
+              min="10"
+              max="60"
+              value={delay}
+              onChange={handleDelayChange}
+              className="w-16 px-3 py-2 rounded-lg text-base border-none text-center text-black"
+            />
+            <span className="text-white text-base">seconds</span>
+          </div>
         </div>
       </div>
 
-      {isMobile ? (
-        <>
-          <div className="content-container">
-            <div className={`practice-container ${explanation ? 'hide-practice' : ''}`}>
-              <div className="practice-text-container">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentText}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="practice-text"
-                  >
-                    <div className="practice-content">
-                      <Typewriter 
-                        text={currentText}
-                        speed={50}
-                        showCursor={true}
-                        loop={false}
-                        onComplete={handleTypingComplete}
-                      />
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {(!selectedDomain && showDomain) && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="domain-name"
-                >
-                  {formatDomainName(currentDomain)}
-                </motion.div>
-              )}
-
-              {index === currentText.length && !explanation && (
-                <div className="buttons-container">
-                  <button 
-                    className="explain-button" 
-                    onClick={handleExplainClick}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <div className="loading-spinner"></div>
-                        Getting explanation...
-                      </>
-                    ) : (
-                      <>
-                        <FaLightbulb className="button-icon" />
-                        Explain with example
-                      </>
-                    )}
-                  </button>
-                  <button className="next-practice-button" onClick={handleNextClick}>
-                    <FaArrowRight className="next-icon" />
-                    Next 
-                  </button>
+      <div className="flex-1 flex flex-col relative">
+        {/* Main content area */}
+        <div className={`flex-1 px-4 pb-32 ${explanation ? 'hidden' : ''}`}>
+          <div className="h-full flex items-center justify-center mt-16">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentText}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-2xl font-bold text-white text-center max-w-2xl mx-auto"
+              >
+                <div className="practice-content">
+                  <Typewriter 
+                    text={currentText}
+                    speed={50}
+                    showCursor={true}
+                    loop={false}
+                    onComplete={handleTypingComplete}
+                  />
                 </div>
-              )}
-            </div>
-
-            {explanation && (
-              <div className="explanation-container">
-                <div className="explanation-content">
-                  {formatExplanation(explanation)}
-                </div>
-              </div>
-            )}
-            {error && (
-              <div className="error-container">
-                <div className="error-content">
-                  <FaExclamationTriangle className="error-icon" />
-                  <p>{error}</p>
-                </div>
-              </div>
-            )}
+              </motion.div>
+            </AnimatePresence>
           </div>
-
-          <div className="footer-container">
-            <div className="button-container">
-              <AnimatePresence mode="wait">
-                {explanation && !error && (
-                  <button
-                    className="continue-button"
-                    onClick={handleContinueClick}
-                  >
-                    <FaPlayCircle className="button-icon" />
-                    Continue
-                  </button>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        </>
-      ) : (
-        <div className="practice-container">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentText}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="practice-text"
-            >
-              <div className="practice-content">
-                <Typewriter 
-                  text={currentText}
-                  speed={50}
-                  showCursor={true}
-                  loop={false}
-                  className="practice-text"
-                  onComplete={handleTypingComplete}
-                />
-              </div>
-            </motion.div>
-          </AnimatePresence>
 
           {(!selectedDomain && showDomain) && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="domain-name"
+              className="text-white/70 text-lg text-center mt-4"
             >
               {formatDomainName(currentDomain)}
             </motion.div>
           )}
-
-          <AnimatePresence mode="wait">
-            {!explanation && index === currentText.length && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="buttons-container"
-              >
-                <button onClick={handleExplainClick} className="explain-button">
-                  {isLoading ? 'Getting explanation...' : 'Explain with example'}
-                </button>
-                <button onClick={handleNextClick} className="next-practice-button">
-                  Next <FaArrowRight className="next-icon" />
-                </button>
-              </motion.div>
-            )}
-
-            {explanation && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5 }}
-                className="explanation-container"
-              >
-                <div className="explanation-content">
-                  {formatExplanation(explanation)}
-                </div>
-                <button className="continue-button" onClick={handleContinueClick}>
-                  <FaPlayCircle className="button-icon" />
-                  Continue
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
-      )}
+
+        {/* Explanation section */}
+        {explanation && (
+          <div className="absolute inset-0 overflow-y-auto">
+            <div className="min-h-full px-4 pb-24">
+              <div className="max-w-2xl mx-auto py-6">
+                {formatExplanation(explanation)}
+              </div>
+            </div>
+          </div>
+        )}
+        
+        {/* Error display */}
+        {error && (
+          <div className="max-w-2xl mx-auto">
+            <div className="p-4 bg-red-500/10 rounded-lg m-4">
+              <div className="flex items-center gap-2 text-red-500">
+                <FaExclamationTriangle className="w-5 h-5" />
+                <p>{error}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Bottom buttons */}
+        {index === currentText.length && !explanation && (
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/80 backdrop-blur-md">
+            <div className="max-w-2xl mx-auto flex flex-col gap-3">
+              <button 
+                className="w-full bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                onClick={handleExplainClick}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                    Getting explanation...
+                  </>
+                ) : (
+                  <>
+                    <FaLightbulb className="w-5 h-5" />
+                    Explain with example
+                  </>
+                )}
+              </button>
+              <button 
+                className="w-full bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition-all"
+                onClick={handleNextClick}
+              >
+                <FaArrowRight className="w-5 h-5" />
+                Next 
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Continue button for explanation */}
+        {explanation && !error && (
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-black/80 backdrop-blur-md">
+            <div className="max-w-2xl mx-auto">
+              <button
+                className="w-full bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-lg flex items-center justify-center gap-2 transition-all"
+                onClick={handleContinueClick}
+              >
+                <FaPlayCircle className="w-5 h-5" />
+                Continue
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
